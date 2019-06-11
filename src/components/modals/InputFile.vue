@@ -2,6 +2,9 @@
   <md-dialog :md-active.sync="showDialog">
     <md-dialog-title>Import zdrojů</md-dialog-title>  
     <input type="file" @change="uploadFile" accept=".json,application/json"/>
+    <md-dialog-actions>
+        <md-button @click="showDialog=false" class="md-primary" >Storno</md-button>
+    </md-dialog-actions>
   </md-dialog>
 </template>
 
@@ -10,12 +13,9 @@ import { isNull } from 'util';
 
 export default {
   name: 'InputFile',
-  props:{
-    showDialog:{
-      type: Boolean,
-      default: false
-    }
-  },
+  data: () => ({
+    showDialog: false,
+  }),
   methods: {
     uploadFile(e){
       e.preventDefault(); 
@@ -26,8 +26,7 @@ export default {
         let fileContent = reader.result;
         let newSource = JSON.parse(fileContent)
         let allSources = ref.joinArrays(newSource);
-        localStorage.setItem('sources', JSON.stringify(allSources));
-        ref.$emit("importFile");
+        ref.$emit("importFile",allSources);
       }      
     },
     joinArrays(newSources){
@@ -37,8 +36,8 @@ export default {
     },
     arrayUnique(array) {
       var a = array.concat();
-      for(var i=0; i<a.length; ++i) {
-        for(var j=i+1; j<a.length; ++j) {
+      for(var i = 0; i < a.length; ++i) {
+        for(var j = i + 1; j < a.length; ++j) {
           if(!isNull(a[i]) && !isNull(a[j]) && a[i].link === a[j].link)
           
             a.splice(j--, 1);
@@ -46,11 +45,11 @@ export default {
       }
       return a;
     },
-    getContent(){
-      
-    },
     verifyFile(){
 
+    },
+    showFile(show) {
+      this.showDialog = show;
     },
   },
 }

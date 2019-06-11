@@ -14,19 +14,19 @@
     v-bind:editSource="source"
     mode="create"
     />
+    <TimeTransferer />
   </md-drawer>
 </template>
 
 <script>
-import Colors from '../Colors'
+import TimeTransferer from '../TimeTransferer'
 import SourceCreator from '../SourceCreator'
-import { isNull } from 'util';
 
 export default {
   name: 'ServiceBar',
   components: {
-    Colors,
     SourceCreator,
+    TimeTransferer,
   },
   methods: {
     showNav: function(show) {

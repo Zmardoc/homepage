@@ -16,7 +16,7 @@ export default {
         .then(res => {
             this.nameDay = res.data[0].name;
         })
-        .catch(err => console.log(err));
+        //.catch(err =>{} /*console.log(err)*/);
     },
     update(){
       this.date = new Date().toLocaleDateString();

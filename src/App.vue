@@ -4,10 +4,10 @@
     v-on:show-nav="showNav" 
     v-bind:locked="locked" 
     v-on:locking="locked = !locked"
-    v-on:import="showImportDialog = true"
     v-on:importDefault="importDefault"
     v-on:export="exportFile"
     v-on:clear="clearSources"
+    v-on:saveNewSources="saveNewSources"
     />
     <div class="body">
       <ServiceBar ref="serviceBar" v-on:save="refreshSource"/>
@@ -15,15 +15,8 @@
       v-bind:sources="sources" 
       v-on:removeSource="removeSource"
       v-on:openPage="openPage"
-      v-on:editSource="editSource"
       v-bind:locked="locked"
-      />
-      <EditSource ref="editSource"
-      v-on:save="refreshSource"
-      />
-      <InputFile 
-      v-bind:showDialog="showImportDialog" 
-      v-on:importFile="importComplete"
+      v-on:saveChanges="refreshSource"
       />
     </div>
     <Footer version="1.0" ref="footer"/>
@@ -36,10 +29,7 @@ import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import ServiceBar from './components/layout/ServiceBar'
 import Links from './components/layout/Links'
-import EditSource from './components/modals/EditSource'
-import InputFile from './components/modals/InputFile'
 import GlobalServices from './services/GlobalServices'
-import axios from 'axios';
 import json from './assets/sources.json'
 
 export default {
@@ -49,8 +39,6 @@ export default {
     Footer,
     ServiceBar,
     Links,
-    EditSource,
-    InputFile,
     GlobalServices,
   },
   methods:{
@@ -64,13 +52,13 @@ export default {
       this.sources = this.sources.filter(s => s.link !== source.link);
       this.saveSources();
     },
-    editSource(source){
-      this.$refs.editSource.setSource(source);
-      this.saveSources();
-    },
     saveSources() {
       const parsed = JSON.stringify(this.sources);
       localStorage.setItem('sources', parsed);
+    },
+    saveNewSources(sources){
+      localStorage.setItem('sources', JSON.stringify(sources));
+      this.refreshSource();
     },
     openPage(source){
       this.sources.find(s => s.link === source.link).visited++;
@@ -89,10 +77,6 @@ export default {
       a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
       e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
       a.dispatchEvent(e);
-    },
-    importComplete(){
-      this.showImportDialog = false;
-      this.refreshSource();
     },
     clearSources(){
       const parsed = JSON.stringify([]);

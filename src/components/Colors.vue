@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { isNull } from 'util';
 
 export default {
   name: 'Colors',

@@ -17,7 +17,7 @@ export default {
     },
     save(){
       this.showDialog = false;
-      this.$emit('save');
+      this.$emit('saveChanges');
     }
   },
   components: {
